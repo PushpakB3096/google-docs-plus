@@ -38,7 +38,12 @@ const TextEditor = () => {
     if (source === "api") return;
 
     // if the user itself made changes on the editor, send the changes to the server via socket event
-    socket.emit("receive-change", delta);
+    socket.emit("send-change", delta);
+  };
+
+  // everytime we receive some changes by other users, update the contents of the editor
+  const updateEditor = delta => {
+    quill.updateContents(delta);
   };
 
   // this useEffect will run once on mount only
@@ -78,9 +83,13 @@ const TextEditor = () => {
       // if user changes something on the editor, send it to the server
       quill.on("text-change", sendUserChangesToServer);
 
+      // if some other user has made changes to the editor, update the current editor with the changes
+      socket.on("receive-changes", updateEditor);
+
       // remove the event handler on unmount
       return () => {
         quill.off("text-change", sendUserChangesToServer);
+        socket.off("receive-changes", updateEditor);
       };
     },
     // whenever the socket or the quill itself changes

@@ -6,5 +6,9 @@ const io = require("socket.io")(3001, {
 });
 
 io.on("connection", socket => {
-  socket.on("receive-change", delta => console.log(delta));
+  // if the socket has some changes on the editor sent by the client
+  socket.on("send-change", delta => {
+    // Broadcast means send the changes to all the users except us
+    socket.broadcast.emit("receive-changes", delta);
+  });
 });
