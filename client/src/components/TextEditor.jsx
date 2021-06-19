@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import Quill from "quill";
 import { io } from "socket.io-client";
 
@@ -24,7 +25,8 @@ const TextEditor = () => {
   const [quill, setQuill] = useState(null);
   const [socket, setSocket] = useState(null);
   const wrapper = useRef();
-
+  // getting the ID of the document from the route params
+  const { id: documentId } = useParams();
   /* 
     this function will check if there are changes on the editor and if the changes are made by the current user,
     then send those changes to the server via the socket
@@ -46,6 +48,11 @@ const TextEditor = () => {
     quill.updateContents(delta);
   };
 
+  const loadDocumentFromUser = document => {
+    quill.setContents(document);
+    quill.enable();
+  };
+
   // this useEffect will run once on mount only
   useEffect(() => {
     // creates an editor containersdsa for placing the quil editor inside including the toolbar
@@ -58,6 +65,10 @@ const TextEditor = () => {
         toolbar: toolbarOptions
       }
     });
+    // disable the editor when created. we are enabling it later when we get some content to load from the server
+    q.disable();
+    // editor placeholder text
+    q.setText("Loading document...");
     // set quill instance to the local state
     setQuill(q);
 
@@ -95,6 +106,18 @@ const TextEditor = () => {
     // whenever the socket or the quill itself changes
     [socket, quill]
   );
+
+  useEffect(() => {
+    // if we don't have socket or the quill, don't proceed
+    if (socket === null || quill === null) return;
+
+    // sends the documentID to the server
+    socket.emit("get-document", documentId);
+
+    // 'once' will ensure that the handler runs once and then gets garbage collected
+    // this will run once to load the document from the server
+    socket.once("load-document", loadDocumentFromUser);
+  }, [socket, quill, documentId]);
 
   return <div className='container' ref={wrapper}></div>;
 };
