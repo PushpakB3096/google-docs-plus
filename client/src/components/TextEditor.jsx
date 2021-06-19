@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import Quill from "quill";
 
 import "quill/dist/quill.snow.css";
@@ -19,7 +19,7 @@ const TextEditor = () => {
     };
   }, []);
 
-  return <div id='container' ref={wrapper}></div>;
+  return <div className='container' ref={wrapper}></div>;
 };
 
 export default TextEditor;
