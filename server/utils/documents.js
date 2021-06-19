@@ -14,4 +14,14 @@ const findOrCreateDoc = async id => {
   });
 };
 
-module.exports = findOrCreateDoc;
+// updates the data of a document
+const updateDoc = async document => {
+  await Document.findByIdAndUpdate(document.documentId, {
+    data: document.data
+  });
+};
+
+module.exports = {
+  findOrCreateDoc,
+  updateDoc
+};

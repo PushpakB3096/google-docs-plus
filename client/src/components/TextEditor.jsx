@@ -119,6 +119,20 @@ const TextEditor = () => {
     socket.once("load-document", loadDocumentFromUser);
   }, [socket, quill, documentId]);
 
+  // this useEffect is used to save the document every 2.5 seconds
+  useEffect(() => {
+    let interval = setInterval(() => {
+      socket.emit("save-document", {
+        data: quill.getContents(),
+        documentId
+      });
+    }, 2500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [socket, quill]);
+
   return <div className='container' ref={wrapper}></div>;
 };
 
