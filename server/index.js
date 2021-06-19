@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const findOrCreateDoc = require("./utils/documents");
 
 dotenv.config();
 
@@ -22,15 +23,15 @@ mongoose
   );
 
 io.on("connection", socket => {
-  socket.on("get-document", documentId => {
+  socket.on("get-document", async documentId => {
     // sets the data to be sent back to the client
-    const data = "";
+    const document = await findOrCreateDoc(documentId);
     /*
       On first time load, we need to put the socket in its own room having the ID of documentId.
       Any other socket can join the same room if they have the room ID.
     */
     socket.join(documentId);
-    socket.emit("load-document", data);
+    socket.emit("load-document", document.data);
 
     // if the socket has some changes on the editor sent by the client
     socket.on("send-change", delta => {
