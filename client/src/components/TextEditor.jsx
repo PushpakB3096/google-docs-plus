@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Quill from "quill";
+import { io } from "socket.io-client";
 
 import "quill/dist/quill.snow.css";
 
@@ -34,9 +35,15 @@ const TextEditor = () => {
       }
     });
 
-    // before unmount, remove the quill editor
+    // connecting to socket from the server
+    const socket = io("http://localhost:3001");
+
+    // before unmount
     return () => {
+      // remove the quill editor
       wrapper.current.innerHTML = "";
+      // disconnect from the socket
+      socket.disconnect();
     };
   }, []);
 
