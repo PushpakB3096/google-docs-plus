@@ -6,5 +6,5 @@ const io = require("socket.io")(3001, {
 });
 
 io.on("connection", socket => {
-  console.log("connected");
+  socket.on("receive-change", delta => console.log(delta));
 });
