@@ -3,7 +3,7 @@ import Quill from "quill";
 
 import "quill/dist/quill.snow.css";
 
-var toolbarOptions = [
+const toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ size: ["small", false, "large", "huge"] }], // custom dropdown
 
@@ -27,7 +27,12 @@ const TextEditor = () => {
     const editor = document.createElement("div");
     wrapper.current.append(editor);
 
-    new Quill(editor, { theme: "snow", modules: { toolbar: toolbarOptions } });
+    new Quill(editor, {
+      theme: "snow",
+      modules: {
+        toolbar: toolbarOptions
+      }
+    });
 
     // before unmount, remove the quill editor
     return () => {
