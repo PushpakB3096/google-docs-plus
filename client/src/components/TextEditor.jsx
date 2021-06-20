@@ -73,7 +73,8 @@ const TextEditor = () => {
     setQuill(q);
 
     // connecting to socket from the server
-    const sock = io("http://localhost:3001");
+    // const sock = io("http://localhost:5000");
+    const sock = io("https://google-docs-plus-api.herokuapp.com/");
     // setting the socket to the local state
     setSocket(sock);
 
