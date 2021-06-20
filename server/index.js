@@ -1,10 +1,21 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+// var express = require("express");
+
 const { findOrCreateDoc, updateDoc } = require("./utils/documents");
 
+// var app = express();
 dotenv.config();
 
-const io = require("socket.io")(3001, {
+// app.get("/", (req, res) => {
+//   res.send("Welcome to Google Docs Plus API");
+// });
+
+// app.listen(process.env.PORT || 5000, () => {
+//   console.log("Server started");
+// });
+
+const io = require("socket.io")(process.env.PORT || 5000, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"]
